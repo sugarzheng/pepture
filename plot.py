@@ -20,7 +20,7 @@ def matrix_map(x_train,name):
 #	for line in x_train[1:]:
 #		sum_+=line
 	train_matrix=open(name,'w')
-	for line in sum_[0:20]:
+	for line in sum_[0:21]:
 		for ll in line:
 			train_matrix.write(str(float(ll))+" ")
 			#train_matrix.write(str(float(ll)/float(np.sum(line)))+" ")
@@ -28,8 +28,11 @@ def matrix_map(x_train,name):
 	train_matrix.close()
 #(train,validation,test,num_classes)=loadmulticlassification()
 (train,validation,test,num_classes)=loadtestdata()
-(x_train, y_train)=peptoblosum(train)
-(x_test, y_test)=peptoblosum(test)
+#(train,validation,test,num_classes)=loadbinaryclassification()
+#(x_train, y_train)=peptoblosum(train)
+#(x_test, y_test)=peptoblosum(test)
+(x_train, y_train)=peptovec(train)
+(x_test, y_test)=peptovec(test)
 list_name=['tests/a.dat','tests/b.dat','tests/c.dat']
 a_list=[]
 b_list=[]

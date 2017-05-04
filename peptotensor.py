@@ -14,8 +14,8 @@ def peptovec(vector):
 		line=line.strip()
 		xtemp=[]
 		for aa in line.split()[2]:
-			aa_list=[0]*20
-			aa_list[int(amino_acids[aa])]=1
+			aa_list=[0]*21
+			aa_list[int(amino_acids[aa])]=100
 			xtemp.append(aa_list)
 		ytemp.append(line.split()[-1])
 		result_vector.append(np.array(xtemp).T)

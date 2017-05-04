@@ -17,12 +17,16 @@ import math
 from peptotensor import * 
 from loaddata import *
 ###########################################start inputing data
-(train,validation,test,num_classes)=loadbinaryclassification()
+#(train,validation,test,num_classes)=loadbinaryclassification()
+num=16
+img_rows, img_cols = 20, num+1
+(train,validation,test,num_classes)=load_length_classification(num)
+(train,validation,test,num_classes)=load_ABPP_classification(num)
 #(train,validation,test,num_classes)=loadmulticlassification()
 #(train,validation,test,num_classes)=loadtestdata()
 ############start dnn
-batch_size = 1280
-epochs = 50
+batch_size = 2048
+epochs = 100
 (x_train, y_train)=peptoblosum(train)
 (x_validation, y_validation)=peptoblosum(validation)
 (x_test, y_test)=peptoblosum(test)
@@ -30,7 +34,6 @@ epochs = 50
 #(x_validation, y_validation)=peptovec(validation)
 #(x_test, y_test)=peptovec(test)
 
-img_rows, img_cols = 20, 31
 print(x_train.shape[0],x_train.shape[1],x_train.shape[2])
 x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
 x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
@@ -46,7 +49,7 @@ y_train = keras.utils.to_categorical(y_train, num_classes)
 y_validation = keras.utils.to_categorical(y_validation, num_classes)
 y_test = keras.utils.to_categorical(y_test, num_classes)
 model = Sequential()
-model.add(Conv2D(32, kernel_size=(2, 2),
+model.add(Conv2D(32, kernel_size=(3, 3),
 				activation='relu',
 				padding='valid',
 				input_shape=input_shape))
@@ -54,9 +57,9 @@ model.add(Conv2D(32, kernel_size=(2, 2),
 #model.add(MaxPooling2D(pool_size=(2, 2)))
 #model.add(Dropout(0.25))
 model.add(Flatten())
-model.add(Dense(256, activation='relu'))
+model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.5))
-model.add(Dense(256, activation='relu'))
+model.add(Dense(512, activation='relu'))
 model.add(Dropout(0.5))
 #model.add(Dense(256, activation='relu'))
 #model.add(Dropout(0.5))
@@ -79,7 +82,7 @@ plot_model(model, to_file='model.png')
 print('validation loss:', score[0])
 print('validation accuracy:', score[1])
 print('validation ?:', score)
-model.save('models/binary_active.h5')
+model.save('models/ABPP_active.h5')
 accuracy=[]
 F1_score=[]
 Recall=[]
@@ -95,4 +98,5 @@ for i in range(0,num_classes):
 	Precision.append(precision_score(l,p))
 print('Accuracy','F1 score','Recall','Precision')
 for i in range(0,num_classes):
-	print(accuracy[i],F1_score[i],Recall[i],Precision[i])	
+	print(accuracy[i],F1_score[i],Recall[i],Precision[i])
+
