@@ -21,7 +21,8 @@ from loaddata import *
 num=16
 img_rows, img_cols = 20, num+1
 (train,validation,test,num_classes)=load_length_classification(num)
-(train,validation,test,num_classes)=load_ABPP_classification(num)
+#(train,validation,test,num_classes)=load_ABPP_classification(num)
+#(train,validation,test,num_classes)=load_serine_classification(num)
 #(train,validation,test,num_classes)=loadmulticlassification()
 #(train,validation,test,num_classes)=loadtestdata()
 ############start dnn
@@ -82,7 +83,7 @@ plot_model(model, to_file='model.png')
 print('validation loss:', score[0])
 print('validation accuracy:', score[1])
 print('validation ?:', score)
-model.save('models/ABPP_active.h5')
+model.save('models/cysteine_active_reverse20170626.h5')
 accuracy=[]
 F1_score=[]
 Recall=[]

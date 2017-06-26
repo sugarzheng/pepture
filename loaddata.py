@@ -23,7 +23,20 @@ def data_append(list_file,(train,test,validation),label):
 				else:
 					validation.append(line.strip()+" "+str(label))
 	return (train,test,validation)
-
+def reverse_add(active_site,non_active_site):
+	reverse_list=list()
+	for line in non_active_site:
+		line=line.strip()
+		line=line.split()[0]+"_reverse"+" "+line.split()[1]+" "+line.split()[2][::-1]
+		reverse_list.append(line)
+	for line in active_site:
+		line=line.strip()
+		line=line.split()[0]+"_reverse"+" "+line.split()[1]+" "+line.split()[2][::-1]
+		reverse_list.append(line)
+	non_active_site +=reverse_list
+	return non_active_site
+	
+	
 
 ###########################################start inputing data
 def loadmulticlassification():
@@ -58,6 +71,9 @@ def loadtestdata():
 def loadbinaryclassification():
 	active_site = open("data/ACTIVE_OR_NOT/active.dat", "r").readlines()
 	non_active_site=open("data/ACTIVE_OR_NOT/not_active.dat", "r").readlines()
+	###########reverse sequence as negative control
+	non_active_site=reverse_add(active_site,non_active_site)
+	print(non_active_site)
 	train=[]
 	test=[]
 	validation=[]
@@ -74,6 +90,8 @@ def length_classification(file1,file2,num):
 	###num means the length of peptide except the center residue,num must be an even number
 	active_site = open(file1, "r").readlines()
 	non_active_site=open(file2, "r").readlines()
+	non_active_site=reverse_add(active_site, non_active_site)
+	print non_active_site
 	train=[]
 	test=[]
 	validation=[]
@@ -113,6 +131,8 @@ def load_length_classification(num):
 	return length_classification('data/ACTIVE_OR_NOT_40_length/active.dat','data/ACTIVE_OR_NOT_40_length/not_active.dat',num)
 def load_ABPP_classification(num):
 	return length_classification('data/ABPP/active.dat','data/ABPP/not_active.dat',num)
+def load_serine_classification(num):
+	return length_classification('data/serine/active.dat','data/serine/not_active.dat',num)
 def loadpredictdata(num):
 	predict_site=open("results/input.dat", "r").readlines()
 	train=[]
