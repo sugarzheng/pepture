@@ -74,8 +74,9 @@ model.compile(loss=keras.losses.categorical_crossentropy,
 			optimizer=keras.optimizers.Adadelta(),
 #			optimizer='sgd',
 			metrics=['categorical_accuracy'])
-
-model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs,#class_weight=class_weight,
+class_weight= {	0:1.,
+				1:3.,}
+model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs,class_weight=class_weight,
 			verbose=1, validation_data=(x_validation, y_validation))
 keras.callbacks.TensorBoard(log_dir='./logs')
 score = model.evaluate(x_test, y_test, verbose=0)
@@ -83,7 +84,8 @@ plot_model(model, to_file='model.png')
 print('validation loss:', score[0])
 print('validation accuracy:', score[1])
 print('validation ?:', score)
-model.save('models/cysteine_active_reverse20170626.h5')
+#model.save('models/cysteine_active_reverse20170626.h5')
+model.save('models/test.h5')
 accuracy=[]
 F1_score=[]
 Recall=[]
@@ -99,5 +101,5 @@ for i in range(0,num_classes):
 	Precision.append(precision_score(l,p))
 print('Accuracy','F1 score','Recall','Precision')
 for i in range(0,num_classes):
-	print(accuracy[i],F1_score[i],Recall[i],Precision[i])
+	print("%0.3f %0.3f %0.3f %0.3f" % (accuracy[i],F1_score[i],Recall[i],Precision[i]))
 

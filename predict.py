@@ -7,13 +7,13 @@ import h5py
 from keras.models import load_model
 from peptotensor import *
 from loaddata import *
-predict_pdb = open("results/ECOLI/input.dat", "r").readlines()
+predict_pdb = open("results/LEGPH_reverse/input.dat", "r").readlines()
 prediction=[]
-os.system("rm results/ECOLI/predict_num -rf")
+os.system("rm results/LEGPH_reverse/predict_num -rf")
 batch_size = 2048
 peptide_num=16
 img_rows, img_cols = 20, peptide_num+1
-model = load_model('models/binary_20170504.h5')
+model = load_model('models/cysteine_active_reverse20170626.h5')
 #model = load_model('models/ABPP_20170505.h5')
 count=0
 for (i,line) in enumerate(predict_pdb):
@@ -27,7 +27,7 @@ for (i,line) in enumerate(predict_pdb):
 		(x_prediction, y_prediction)=peptoblosum(prediction)
 		x_prediction = x_prediction.reshape(x_prediction.shape[0], img_rows, img_cols, 1)
 		classes =model.predict(x_prediction,batch_size=batch_size)
-		output=open("results/ECOLI/predict_num",'a')
+		output=open("results/LEGPH_reverse/predict_num",'a')
 		for i,num in enumerate(classes.argmax(axis=1)):
 			output.write(str(num)+"\t"+str(classes[i][num])+"\n")
 		prediction=[]
