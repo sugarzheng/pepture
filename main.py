@@ -3,7 +3,6 @@ from __future__ import print_function
 import argparse
 import keras
 from keras.utils import plot_model
-from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
 from keras.layers import Conv2D, MaxPooling2D
@@ -18,10 +17,11 @@ import math
 from peptotensor import * 
 from loaddata import *
 from predict import *
-def train_part(AA):
+from parse import *
+def train_part(AA,num):
 	###########################################start inputing data
 	#(train,validation,test,num_classes)=loadbinaryclassification()
-	num=16
+#	num=16
 	img_rows, img_cols = 20, num+1
 	(train,validation,test,num_classes)=load_data(AA,num)
 	#(train,validation,test,num_classes)=load_length_classification(num)
@@ -31,7 +31,7 @@ def train_part(AA):
 	#(train,validation,test,num_classes)=loadtestdata()
 	############start dnn
 	batch_size = 2048
-	epochs = 100
+	epochs = 30
 	(x_train, y_train)=peptoblosum(train)
 	(x_validation, y_validation)=peptoblosum(validation)
 	(x_test, y_test)=peptoblosum(test)
@@ -89,7 +89,7 @@ def train_part(AA):
 	print('validation accuracy:', score[1])
 	print('validation ?:', score)
 	#model.save('models/cysteine_active_reverse20170626.h5')
-	model.save('models/'+AA+'_test.h5')
+	model.save('models/'+AA_abbre[AA]+'_test.h5')
 	accuracy=[]
 	F1_score=[]
 	Recall=[]
@@ -111,15 +111,25 @@ def main(argv):
 	parser = argparse.ArgumentParser(description="usage: %prog [flags] { AA }")
 	parser.add_argument("--AA",metavar='AA',type=str, #choices=['C','H','S','D','E']
 						help="input the training amino acid")
-	parser.add_argument("--predict",type=str,default="data/uniprot_sprot.fasta",
-						help="open prediction model,default is uniprot_sprot")
+	parser.add_argument("--train",action="store_true",
+						help="open train model")
+	parser.add_argument("--predict",action="store_true",
+						help="open prediction model")
+	parser.add_argument("--parse",action="store_true",
+						help="open parse method")
+	parser.add_argument("--fasta",type=str,default="data/uniprot_sprot.fasta",
+						help="define fasta file path")
+	parser.add_argument("--length",type=int,default=16,
+						help="define peptide length")
 	args=parser.parse_args()
 	AA=args.AA
-	if not args.predict:
-		train_part(AA)	
-	else:
-		print(args.predict)
-		predict_part(AA)
-
+	peptide_num=args.length
+	if args.train:
+		train_part(AA,peptide_num)	
+	if args.predict:
+		print(args.fasta)
+		predict_part(AA,args.fasta,peptide_num)
+	if args.parse:
+		parse_part(AA)
 if __name__ == "__main__":
 	sys.exit(main(sys.argv[1:]))

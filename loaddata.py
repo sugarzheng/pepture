@@ -14,6 +14,16 @@ def extract_peptide(fulseq,name,num):
 	line=name+"\t"+str(cnum)+"\t"+(low_-(cnum-21))*'-'+fulseq[low_:high_]+(cnum+20-high_)*'-'+'\n'
 	return line
 
+def download_fasta(database):
+	if os.path.exists(database):
+		pass
+	else:
+		if not os.path.exists(database+".gz"):
+			os.system("wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz -P data/")
+		print("unziping data/uniprot_sprot.fasta.gz")
+		os.system("gunzip data/uniprot_sprot.fasta.gz ")	
+
+
 def extract_active(AA):
 	AA_name=AA_abbre[AA]
 	print("start extracting "+AA_name+" active site from active_site.dat file")
@@ -22,13 +32,7 @@ def extract_active(AA):
 	output=open("data/"+AA_name+"/active.dat",'w')
 	act_list=open(filename).readlines()
 	database='data/uniprot_sprot.fasta'
-	if os.path.exists(database):
-		pass
-	else:
-		if not os.path.exists(database+".gz"):	
-			os.system("wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz -P data/")
-		print("unziping data/uniprot_sprot.fasta.gz")
-		os.system("gunzip data/uniprot_sprot.fasta.gz ")
+	donwload_fasta(database)
 	records = SeqIO.parse(database,"fasta")
 	record_dict=SeqIO.to_dict(records)
 	print("the fasta dictionary has been prepared")
