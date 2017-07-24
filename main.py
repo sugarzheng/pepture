@@ -117,6 +117,8 @@ def main(argv):
 						help="open prediction model")
 	parser.add_argument("--parse",action="store_true",
 						help="open parse method")
+#	parser.add_argument("--homology",action="store_true",
+#						help="open homology method")
 	parser.add_argument("--fasta",type=str,default="data/uniprot_sprot.fasta",
 						help="define fasta file path")
 	parser.add_argument("--length",type=int,default=16,
@@ -131,5 +133,7 @@ def main(argv):
 		predict_part(AA,args.fasta,peptide_num)
 	if args.parse:
 		parse_part(AA)
+#	if args.homology:
+#		homology_part(AA)
 if __name__ == "__main__":
 	sys.exit(main(sys.argv[1:]))

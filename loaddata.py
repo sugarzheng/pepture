@@ -32,7 +32,7 @@ def extract_active(AA):
 	output=open("data/"+AA_name+"/active.dat",'w')
 	act_list=open(filename).readlines()
 	database='data/uniprot_sprot.fasta'
-	donwload_fasta(database)
+	download_fasta(database)
 	records = SeqIO.parse(database,"fasta")
 	record_dict=SeqIO.to_dict(records)
 	print("the fasta dictionary has been prepared")
