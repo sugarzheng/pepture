@@ -14,8 +14,9 @@ def peptovec(vector):
 		line=line.strip()
 		xtemp=[]
 		for aa in line.split()[2]:
-			aa_list=[0]*21
-			aa_list[int(amino_acids[aa])]=100
+			aa_list=[0]*20
+			if int(amino_acids[aa]) <=19:
+				aa_list[int(amino_acids[aa])]=100
 			xtemp.append(aa_list)
 		ytemp.append(line.split()[-1])
 		result_vector.append(np.array(xtemp).T)
@@ -37,6 +38,6 @@ def peptoblosum(vector):
                 else:
                     aa_list_temp[i]=int((math.exp(-4*0.347))/(math.exp(11*0.347))*255)
             xtemp.append(aa_list_temp)
-        ytemp.append(line.split()[-1])
+        ytemp.append(int(line.split()[-1]))
         result_vector.append(np.array(xtemp).T)
     return (np.array(result_vector),np.array(ytemp))

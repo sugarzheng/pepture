@@ -5,7 +5,7 @@ import h5py
 import math
 import sys
 from Bio import SeqIO
-AA_abbre={'D':'aspartate','E':'glutamate','C':'cysteine','H':'histidine','S':'serine'}
+AA_abbre={'D':'aspartate','E':'glutamate','C':'cysteine','H':'histidine','S':'serine','W':'tryptophan','K':'lysine','R':'arginine'}
 
 def extract_peptide(fulseq,name,num):
 	cnum=int(num)
@@ -52,7 +52,7 @@ def extract_active(AA):
 				output.write(write_line)
 	output.close()
 	print(AA_name+" active site has been extracted.")
-	print("start extracting not active "+AA_name+" site.")
+	print("start extracting in-active "+AA_name+" site.")
 	not_output=open("data/"+AA_name+"/not_active.dat",'w')
 	special_act_list=open("data/"+AA_name+"/active.dat").readlines()
 	not_active_list=[]
@@ -75,7 +75,7 @@ def extract_active(AA):
 						not_active_list.insert(0,pep.strip().split()[2][10:30])
 						not_output.write(pep)
 	not_output.close()	
-	print(AA_name+"'s not active site has been extracted.")
+	print(AA_name+"'s in-active site has been extracted.")
 
 def cut_line(line,num):
 	line=line.strip()
@@ -205,7 +205,7 @@ def download_data(AA,num):
 		pass
 	else:
 		print("preparing for all the active_site dataset in the uniprot_sprot database")
-		os.system("awk \'{if($1==\"ID\")ID=$2;if($1==\"AC\")AC=$2;if($1==\"FT\" && $2==\"ACT_SITE\")print AC,ID,$3}\' data/uniprot_sprot.dat >data/active_site.dat")
+		os.system("awk \'{if($1==\"ID\")ID=$2;if($1==\"AC\" and AC_FLAG==1)AC=$2;if($1==\"FT\" && $2==\"ACT_SITE\")print AC,ID,$3;if($1==\"//\")AC_FLAG=0}\' data/uniprot_sprot.dat >data/active_site.dat")
 	AA_file_1="data/"+AA_name+"/active.dat"
 	AA_file_0="data/"+AA_name+"/not_active.dat"
 	if os.path.exists(AA_file_1) and os.path.exists(AA_file_1) and os.path.getsize(AA_file_1) and os.path.getsize(AA_file_0):

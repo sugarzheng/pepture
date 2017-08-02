@@ -5,14 +5,14 @@ import keras
 from keras.utils import plot_model
 from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten
-from keras.layers import Conv2D, MaxPooling2D
+from keras.layers import Conv2D#, MaxPooling2D
 from keras import backend as K
 import os, random
 import numpy as np
 import h5py
 from sklearn.datasets import make_classification
 from sklearn.metrics import accuracy_score, f1_score, precision_score, recall_score, classification_report, confusion_matrix,average_precision_score
-from Bio.SubsMat.MatrixInfo import blosum62 as blosum
+#from Bio.SubsMat.MatrixInfo import blosum62 as blosum
 import math
 from peptotensor import * 
 from loaddata import *
@@ -28,17 +28,18 @@ def train_part(AA,num):
 	#(train,validation,test,num_classes)=load_ABPP_classification(num)
 	#(train,validation,test,num_classes)=load_serine_classification(num)
 	#(train,validation,test,num_classes)=loadmulticlassification()
-	#(train,validation,test,num_classes)=loadtestdata()
+#	(train,validation,test,num_classes)=loadtestdata()
 	############start dnn
 	batch_size = 2048
 	epochs = 30
 	(x_train, y_train)=peptoblosum(train)
 	(x_validation, y_validation)=peptoblosum(validation)
 	(x_test, y_test)=peptoblosum(test)
-	#(x_train, y_train)=peptovec(train)
-	#(x_validation, y_validation)=peptovec(validation)
-	#(x_test, y_test)=peptovec(test)
-	
+#	(x_train, y_train)=peptovec(train)
+#	(x_validation, y_validation)=peptovec(validation)
+#	(x_test, y_test)=peptovec(test)
+	#class_factor=float((len(y_test)-np.sum(y_test)))/float(np.sum(y_test))
+	#print("the class_factor is %0.1f" % (class_factor))
 	print(x_train.shape[0],x_train.shape[1],x_train.shape[2])
 	x_train = x_train.reshape(x_train.shape[0], img_rows, img_cols, 1)
 	x_test = x_test.reshape(x_test.shape[0], img_rows, img_cols, 1)
@@ -78,34 +79,36 @@ def train_part(AA,num):
 				optimizer=keras.optimizers.Adadelta(),
 	#			optimizer='sgd',
 				metrics=['categorical_accuracy'])
+#				metrics=['acc'])
 	class_weight= {	0:1.,
-					1:3.,}
+					1:3.,}#class_factor,}
+	tbCAllBack=keras.callbacks.TensorBoard(log_dir='./logs/run_a')#,histogram_freq=0,write_graph=True,write_images=True)
 	model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs,class_weight=class_weight,
-				verbose=1, validation_data=(x_validation, y_validation))
-	keras.callbacks.TensorBoard(log_dir='./logs')
+				verbose=1, validation_data=(x_validation, y_validation),callbacks=[tbCAllBack])
+#	keras.callbacks.TensorBoard(log_dir='./logs/run_a')
 	score = model.evaluate(x_test, y_test, verbose=0)
 #	plot_model(model, to_file='model.png')
-	print('validation loss:', score[0])
-	print('validation accuracy:', score[1])
-	print('validation ?:', score)
+	print('test loss:', score[0])
+	print('test accuracy:', score[1])
+	print('test ?:', score)
 	#model.save('models/cysteine_active_reverse20170626.h5')
 	model.save('models/'+AA_abbre[AA]+'_test.h5')
 	accuracy=[]
 	F1_score=[]
 	Recall=[]
 	Precision=[]
-	weighted_prediction=model.predict(x_validation)
+	weighted_prediction=model.predict(x_test)
 	#print(classification_report(weighted_prediction,y_validation))
 	for i in range(0,num_classes):
-		l=y_validation[:,i]
+		l=y_test[:,i]
 		p=np.array([round(x[i]) for x in weighted_prediction])
 		accuracy.append(accuracy_score(l,p))
 		F1_score.append(f1_score(l,p))
 		Recall.append(recall_score(l,p))
 		Precision.append(precision_score(l,p))
-	print('Accuracy','F1 score','Recall','Precision')
+	print('Accuracy','Precision','Recall','F1-measurement')
 	for i in range(0,num_classes):
-		print("%0.3f %0.3f %0.3f %0.3f" % (accuracy[i],F1_score[i],Recall[i],Precision[i]))
+		print("%0.3f %0.3f %0.3f %0.3f" % (accuracy[i],Precision[i],Recall[i],F1_score[i]))
 
 def main(argv):
 	parser = argparse.ArgumentParser(description="usage: %prog [flags] { AA }")
