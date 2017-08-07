@@ -205,7 +205,7 @@ def download_data(AA,num):
 		pass
 	else:
 		print("preparing for all the active_site dataset in the uniprot_sprot database")
-		os.system("awk \'{if($1==\"ID\")ID=$2;if($1==\"AC\" && AC_FLAG==1)AC=$2;if($1==\"FT\" && $2==\"ACT_SITE\")print AC,ID,$3;if($1==\"//\")AC_FLAG=0}\' data/uniprot_sprot.dat >data/active_site.dat")
+		os.system("awk \'{if($1==\"ID\")ID=$2;if($1==\"AC\" && AC_FLAG==0){AC=$2,AC_FLAG=1};if($1==\"FT\" && $2==\"ACT_SITE\")print AC,ID,$3;if($1==\"//\")AC_FLAG=0}\' data/uniprot_sprot.dat >data/active_site.dat")
 	AA_file_1="data/"+AA_name+"/active.dat"
 	AA_file_0="data/"+AA_name+"/not_active.dat"
 	if os.path.exists(AA_file_1) and os.path.exists(AA_file_1) and os.path.getsize(AA_file_1) and os.path.getsize(AA_file_0):
