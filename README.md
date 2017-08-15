@@ -9,9 +9,9 @@ and try this one
 
 python main.py --AA C --train
 
---AA the ami#no acid you want to parse
+--AA the amino acid you want to parse
 
---train trai#n model
+--train train model
 
 --predict predict model
 

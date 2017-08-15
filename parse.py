@@ -6,8 +6,8 @@ from loaddata import *
 from peptotensor import *	
 def parse_part(AA):
 	active_site = open("results/"+AA_abbre[AA]+"/active_site.dat", "r")
-#	input_site=open("data/"+AA_abbre[AA]+"/active.dat",'r').readlines()
-	input_site=open("data/"+AA_abbre[AA]+"/homology_result_uniq",'r').readlines()
+	input_site=open("data/"+AA_abbre[AA]+"/active.dat",'r').readlines()
+#	input_site=open("data/"+AA_abbre[AA]+"/homology_result_uniq",'r').readlines()
 	input_list1=[]
 	input_list2=[]
 	for line in input_site:
